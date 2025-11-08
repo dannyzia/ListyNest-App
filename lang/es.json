@@ -1,0 +1,16 @@
+{
+  "home": "Inicio",
+  "favorites": "Favoritos",
+  "my_ads": "Mis Anuncios",
+  "settings": "Configuración",
+  "profile": "Perfil",
+  "logout": "Cerrar Sesión",
+  "theme": "Tema",
+  "system_default": "Sistema por Defecto",
+  "light": "Claro",
+  "dark": "Oscuro",
+  "search": "Buscar",
+  "post_ad": "Publicar Anuncio",
+  "menu": "Menú",
+  "messages": "Mensajes"
+}

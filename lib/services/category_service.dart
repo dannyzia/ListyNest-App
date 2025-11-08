@@ -1,0 +1,17 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:listynest/models/category_model.dart';
+import 'package:listynest/config/api_config.dart';
+
+class CategoryService {
+  Future<List<Category>> fetchCategories() async {
+    final response = await http.get(Uri.parse('${ApiConfig.baseUrl}/categories'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      return data.map((json) => Category.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load categories');
+    }
+  }
+}

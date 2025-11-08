@@ -1,53 +1,84 @@
-# To learn more about how to use Nix to configure your environment
-# see: https://developers.google.com/idx/guides/customize-idx-env
-{ pkgs, ... }: {
-  # Which nixpkgs channel to use.
-  channel = "stable-24.05"; # or "unstable"
-  # Use https://search.nixos.org/packages to find packages
+{ pkgs, ... }:
+
+let
+  # 1. Import Nixpkgs with configuration to allow the proprietary Android SDK.
+  pkgsWithAndroid = import pkgs.path {
+    system = pkgs.stdenv.system;
+    config = {
+      allowUnfree = true;
+      android_sdk.accept_license = true;
+    };
+  };
+
+  # 2. Define a complete Android SDK environment.
+  androidComposition = pkgsWithAndroid.androidenv.composeAndroidPackages {
+    platformVersions = [ "34" ];
+    buildToolsVersions = [ "34.0.0" ];
+    
+    # Use the latest actual version instead of "latest"
+    cmdLineToolsVersion = "11.0";
+    
+    includeNDK = false;
+    includeSystemImages = false;
+  };
+
+in {
+  # 3. Update the packages list
   packages = [
-    # pkgs.go
-    # pkgs.python311
-    # pkgs.python311Packages.pip
-    # pkgs.nodejs_20
-    # pkgs.nodePackages.nodemon
+    # Flutter itself
+    pkgsWithAndroid.flutter
+
+    # Add the Android SDK platform-tools
+    androidComposition.platform-tools
+    
+    # General build tools
+    pkgsWithAndroid.unzip
+    pkgsWithAndroid.which
+    pkgsWithAndroid.git
+    pkgsWithAndroid.gcc
+    pkgsWithAndroid.clang
+    pkgsWithAndroid.cmake
+    pkgsWithAndroid.ninja
+    pkgs.pkg-config
+
+    # Go for backend services
+    pkgs.go
+
+    # Libraries for Flutter Linux builds
+    pkgs.gtk3
+    pkgs.webkitgtk
+    pkgs.glib
+    pkgs.pango
+    pkgs.cairo
+    pkgs.atk
+    pkgs.gdk-pixbuf
+    pkgs.at-spi2-atk
   ];
-  # Sets environment variables in the workspace
-  env = {};
+
+  # 4. Set environment variables
+  env = {
+    # Point to the Android SDK root
+    ANDROID_SDK_ROOT = "${androidComposition.androidsdk}/libexec/android-sdk";
+    ANDROID_HOME = "${androidComposition.androidsdk}/libexec/android-sdk";
+  };
+
   idx = {
-    # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
-      # "vscodevim.vim"
-      "google.gemini-cli-vscode-ide-companion"
+      "dart-code.flutter"
     ];
-    # Enable previews
+
     previews = {
       enable = true;
       previews = {
-        # web = {
-        #   # Example: run "npm run dev" with PORT set to IDX's defined port for previews,
-        #   # and show it in IDX's web preview panel
-        #   command = ["npm" "run" "dev"];
-        #   manager = "web";
-        #   env = {
-        #     # Environment variables to set for your server
-        #     PORT = "$PORT";
-        #   };
-        # };
+        flutter = {
+          manager = "flutter";
+        };
       };
     };
-    # Workspace lifecycle hooks
+
     workspace = {
-      # Runs when a workspace is first created
       onCreate = {
-        # Example: install JS dependencies from NPM
-        # npm-install = "npm install";
-        # Open editors for the following files by default, if they exist:
-        default.openFiles = [ ".idx/dev.nix" "README.md" ];
-      };
-      # Runs when the workspace is (re)started
-      onStart = {
-        # Example: start a background task to watch and re-build backend code
-        # watch-backend = "npm run watch-backend";
+        flutter-pub-get = "flutter pub get";
       };
     };
   };

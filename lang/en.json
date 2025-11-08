@@ -1,0 +1,16 @@
+{
+  "home": "Home",
+  "favorites": "Favorites",
+  "my_ads": "My Ads",
+  "settings": "Settings",
+  "profile": "Profile",
+  "logout": "Logout",
+  "theme": "Theme",
+  "system_default": "System Default",
+  "light": "Light",
+  "dark": "Dark",
+  "search": "Search",
+  "post_ad": "Post Ad",
+  "menu": "Menu",
+  "messages": "Messages"
+}

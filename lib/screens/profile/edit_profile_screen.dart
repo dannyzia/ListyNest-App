@@ -1,0 +1,86 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:listynest/providers/auth_provider.dart';
+
+class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key});
+
+  @override
+  _EditProfileScreenState createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _nameController;
+  late TextEditingController _phoneController;
+
+  @override
+  void initState() {
+    super.initState();
+    final user = Provider.of<AuthProvider>(context, listen: false).user;
+    _nameController = TextEditingController(text: user?.name);
+    _phoneController = TextEditingController(text: user?.phone);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (_formKey.currentState!.validate()) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final user = authProvider.user;
+
+      if (user != null) {
+        final data = {
+          'name': _nameController.text,
+          'phone': _phoneController.text,
+        };
+
+        await authProvider.updateUser(user.id, data);
+        Navigator.of(context).pop();
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Edit Profile'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: 'Name'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your name';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _phoneController,
+                decoration: const InputDecoration(labelText: 'Phone'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _submit,
+                child: const Text('Save Changes'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
