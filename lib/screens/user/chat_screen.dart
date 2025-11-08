@@ -1,119 +1,82 @@
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../providers/chat_provider.dart';
-import '../models/chat_message.dart';
+import 'package:listynest/models/chat_message.dart';
+import 'package:listynest/services/chat_service.dart';
 
 class ChatScreen extends StatefulWidget {
-  final String receiverId;
-  final String receiverName;
+  final String conversationId;
 
-  const ChatScreen({super.key, required this.receiverId, required this.receiverName});
+  ChatScreen({required this.conversationId});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController _messageController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
+  final ChatService _chatService = ChatService();
+  final _messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final chatProvider = Provider.of<ChatProvider>(context);
-    final currentUser = FirebaseAuth.instance.currentUser;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.receiverName),
+        title: Text('Chat'),
       ),
       body: Column(
         children: [
           Expanded(
             child: StreamBuilder<List<ChatMessage>>(
-              stream: chatProvider.getChatMessages(widget.receiverId),
+              stream: _chatService.getMessages(widget.conversationId),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
                 if (snapshot.hasError) {
-                  return const Center(child: Text('Error loading messages.'));
+                  return Text('Something went wrong');
                 }
 
-                final messages = snapshot.data ?? [];
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                final messages = snapshot.data!;
 
                 return ListView.builder(
-                  controller: _scrollController,
                   reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
-                    final isMe = message.senderId == currentUser?.uid;
-
-                    return Align(
-                      alignment:
-                          isMe ? Alignment.centerRight : Alignment.centerLeft,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 4.0, horizontal: 8.0),
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: isMe
-                              ? Theme.of(context).primaryColor
-                              : Colors.grey[300],
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                        child: Text(
-                          message.text,
-                          style: TextStyle(
-                            color: isMe ? Colors.white : Colors.black,
-                          ),
-                        ),
-                      ),
+                    return ListTile(
+                      title: Text(message.text),
+                      subtitle: Text(message.senderId),
                     );
                   },
                 );
               },
             ),
           ),
-          _buildMessageComposer(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMessageComposer() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _messageController,
-              decoration: const InputDecoration(
-                hintText: 'Type a message...',
-                border: OutlineInputBorder(),
-              ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: InputDecoration(
+                      hintText: 'Type a message...',
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: () async {
+                    if (_messageController.text.isNotEmpty) {
+                      await _chatService.sendMessage(
+                        widget.conversationId,
+                        _messageController.text,
+                      );
+                      _messageController.clear();
+                    }
+                  },
+                ),
+              ],
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: () {
-              if (_messageController.text.isNotEmpty) {
-                Provider.of<ChatProvider>(context, listen: false).sendMessage(
-                  widget.receiverId,
-                  _messageController.text,
-                );
-                _messageController.clear();
-                _scrollController.animateTo(
-                  0.0,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeOut,
-                );
-              }
-            },
           ),
         ],
       ),

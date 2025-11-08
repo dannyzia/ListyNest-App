@@ -1,57 +1,37 @@
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/chat_provider.dart';
-import '../models/conversation.dart';
-import 'chat_screen.dart';
+import 'package:go_router/go_router.dart';
+import 'package:listynest/models/conversation.dart';
+import 'package:listynest/services/chat_service.dart';
 
 class ConversationsScreen extends StatelessWidget {
-  const ConversationsScreen({super.key});
+  final ChatService _chatService = ChatService();
 
   @override
   Widget build(BuildContext context) {
-    final chatProvider = Provider.of<ChatProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Conversations'),
+        title: Text('Messages'),
       ),
       body: StreamBuilder<List<Conversation>>(
-        stream: chatProvider.getConversations(),
+        stream: _chatService.getConversations(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
           if (snapshot.hasError) {
-            return const Center(child: Text('Error loading conversations.'));
+            return Text('Something went wrong');
           }
 
-          final conversations = snapshot.data ?? [];
-
-          if (conversations.isEmpty) {
-            return const Center(child: Text('You have no conversations.'));
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
           }
+
+          final conversations = snapshot.data!;
 
           return ListView.builder(
             itemCount: conversations.length,
             itemBuilder: (context, index) {
               final conversation = conversations[index];
-
               return ListTile(
-                title: Text(conversation.otherUserName),
-                subtitle: Text(conversation.lastMessage),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatScreen(
-                        receiverId: conversation.otherUserId,
-                        receiverName: conversation.otherUserName,
-                      ),
-                    ),
-                  );
-                },
+                title: Text(conversation.lastMessage),
+                onTap: () => context.go('/chat/${conversation.id}'),
               );
             },
           );

@@ -52,6 +52,10 @@ class _ListingsScreenState extends State<ListingsScreen> {
                 onTap: () => context.go('/favorites'),
               ),
               PopupMenuItem(
+                child: Text('Messages'),
+                onTap: () => context.go('/conversations'),
+              ),
+              PopupMenuItem(
                 child: Text('Sign Out'),
                 onTap: () async {
                   await _authService.signOut();

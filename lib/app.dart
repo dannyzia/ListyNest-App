@@ -7,6 +7,8 @@ import 'package:listynest/screens/create_ad/create_ad_screen.dart';
 import 'package:listynest/screens/favorites/favorites_screen.dart';
 import 'package:listynest/screens/listings/listings_screen.dart';
 import 'package:listynest/screens/my_ads/my_ads_screen.dart';
+import 'package:listynest/screens/user/chat_screen.dart';
+import 'package:listynest/screens/user/conversations_screen.dart';
 import 'package:listynest/screens/user_profile/user_profile_screen.dart';
 import 'package:listynest/services/auth_service.dart';
 
@@ -68,6 +70,16 @@ class App extends StatelessWidget {
             GoRoute(
               path: '/profile',
               builder: (context, state) => UserProfileScreen(),
+            ),
+            GoRoute(
+              path: '/conversations',
+              builder: (context, state) => ConversationsScreen(),
+            ),
+            GoRoute(
+              path: '/chat/:conversationId',
+              builder: (context, state) => ChatScreen(
+                conversationId: state.pathParameters['conversationId']!,
+              ),
             ),
           ],
         );
