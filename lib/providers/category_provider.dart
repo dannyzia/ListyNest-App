@@ -3,11 +3,22 @@ import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
 import '../models/category.dart';
 
+enum CategoryState {
+  initial,
+  loading,
+  loaded,
+  error,
+}
+
 class CategoryProvider with ChangeNotifier {
   List<Category> _categories = [];
+  CategoryState _state = CategoryState.initial;
+  String? _errorMessage;
   bool _isLoading = false;
   
   List<Category> get categories => _categories;
+  CategoryState get state => _state;
+  String? get errorMessage => _errorMessage;
   bool get isLoading => _isLoading;
   
   // Initialize with default categories
@@ -28,7 +39,26 @@ class CategoryProvider with ChangeNotifier {
       Category(id: '9', name: 'Books', icon: Icons.book),
       Category(id: '10', name: 'Pets', icon: Icons.pets),
     ];
+    _state = CategoryState.loaded;
     notifyListeners();
+  }
+  
+  Future<void> fetchCategories() async {
+    _isLoading = true;
+    _state = CategoryState.loading;
+    notifyListeners();
+    
+    try {
+      // Categories are already initialized, just mark as loaded
+      _state = CategoryState.loaded;
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+      _state = CategoryState.error;
+      _isLoading = false;
+      notifyListeners();
+    }
   }
   
   Category? getCategoryById(String id) {

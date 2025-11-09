@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:listynest/models/category_model.dart';
+import 'package:listynest/models/category.dart';
 import 'package:listynest/providers/category_provider.dart';
 import 'package:listynest/providers/location_provider.dart';
 import 'package:listynest/providers/search_provider.dart';

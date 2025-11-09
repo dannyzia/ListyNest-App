@@ -1,40 +1,46 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:listynest/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 class UserService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _usersCollection = 'users';
 
   // Create a new user document in Firestore
-  Future<void> createUser(UserModel user) async {
+  Future<void> createUser(String uid, String email, {String? displayName, String? photoURL}) async {
     try {
-      await _firestore.collection(_usersCollection).doc(user.uid).set(user.toMap());
+      await _firestore.collection(_usersCollection).doc(uid).set({
+        'uid': uid,
+        'email': email,
+        'displayName': displayName ?? email.split('@')[0],
+        'photoURL': photoURL,
+        'createdAt': DateTime.now().toIso8601String(),
+      });
     } catch (e) {
-      print('Error creating user: $e');
+      // Use debugPrint instead of print
+      throw Exception('Error creating user: $e');
     }
   }
 
   // Get a user document from Firestore by UID
-  Future<UserModel?> getUser(String uid) async {
+  Future<Map<String, dynamic>?> getUser(String uid) async {
     try {
       DocumentSnapshot doc = await _firestore.collection(_usersCollection).doc(uid).get();
       if (doc.exists) {
-        return UserModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+        return doc.data() as Map<String, dynamic>;
       }
       return null;
     } catch (e) {
-      print('Error getting user: $e');
-      return null;
+      throw Exception('Error getting user: $e');
     }
   }
 
   // Update a user document in Firestore
-  Future<void> updateUser(UserModel user) async {
+  Future<void> updateUser(String uid, Map<String, dynamic> data) async {
     try {
-      await _firestore.collection(_usersCollection).doc(user.uid).update(user.toMap());
+      await _firestore.collection(_usersCollection).doc(uid).update(data);
     } catch (e) {
-      print('Error updating user: $e');
+      throw Exception('Error updating user: $e');
     }
   }
 }

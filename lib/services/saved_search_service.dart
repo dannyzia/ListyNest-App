@@ -18,14 +18,13 @@ class SavedSearchService {
       'name': s.name,
       'searchTerm': s.searchTerm,
       'filterOptions': {
-        'sortBy': s.filterOptions.sortBy,
+        'search': s.filterOptions.search,
         'condition': s.filterOptions.condition,
         'datePosted': s.filterOptions.datePosted,
-        'priceRange': s.filterOptions.priceRange != null ? {'start': s.filterOptions.priceRange!.start, 'end': s.filterOptions.priceRange!.end} : null,
+        'minPrice': s.filterOptions.minPrice,
+        'maxPrice': s.filterOptions.maxPrice,
         'category': s.filterOptions.category?.name,
-        'country': s.filterOptions.country?.name,
-        'state': s.filterOptions.state?.name,
-        'city': s.filterOptions.city?.name,
+        'location': s.filterOptions.location,
       }
     })).toList();
     
@@ -44,12 +43,14 @@ class SavedSearchService {
         name: searchMap['name'],
         searchTerm: searchMap['searchTerm'],
         filterOptions: FilterOptions(
-          sortBy: filterOptionsMap['sortBy'],
+          search: filterOptionsMap['search'],
           condition: filterOptionsMap['condition'],
           datePosted: filterOptionsMap['datePosted'],
-          priceRange: filterOptionsMap['priceRange'] != null ? RangeValues(filterOptionsMap['priceRange']['start'], filterOptionsMap['priceRange']['end']) : null,
-          // Note: Category, Country, State, and City objects are not fully reconstructed here.
-          // This is a limitation of this implementation. For a full implementation, you would need to fetch these objects from their respective providers based on the stored names.
+          minPrice: filterOptionsMap['minPrice']?.toDouble(),
+          maxPrice: filterOptionsMap['maxPrice']?.toDouble(),
+          location: filterOptionsMap['location'],
+          // Note: Category object is not fully reconstructed here.
+          // This is a limitation of this implementation.
         ),
       );
     }).toList();
@@ -64,14 +65,13 @@ class SavedSearchService {
       'name': s.name,
       'searchTerm': s.searchTerm,
       'filterOptions': {
-        'sortBy': s.filterOptions.sortBy,
+        'search': s.filterOptions.search,
         'condition': s.filterOptions.condition,
         'datePosted': s.filterOptions.datePosted,
-        'priceRange': s.filterOptions.priceRange != null ? {'start': s.filterOptions.priceRange!.start, 'end': s.filterOptions.priceRange!.end} : null,
+        'minPrice': s.filterOptions.minPrice,
+        'maxPrice': s.filterOptions.maxPrice,
         'category': s.filterOptions.category?.name,
-        'country': s.filterOptions.country?.name,
-        'state': s.filterOptions.state?.name,
-        'city': s.filterOptions.city?.name,
+        'location': s.filterOptions.location,
       }
     })).toList();
     

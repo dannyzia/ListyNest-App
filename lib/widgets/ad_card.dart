@@ -82,7 +82,7 @@ class AdCard extends StatelessWidget {
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
-                          ad.location.city,
+                          ad.location?.city ?? 'Unknown',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(fontSize: 12, color: Colors.grey),

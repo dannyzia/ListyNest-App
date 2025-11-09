@@ -94,6 +94,11 @@ Future<void> createAd(Ad ad, List<XFile> images) async {
   }
 }
 
+  // Alias for createAd for compatibility
+  Future<void> postAd(Ad ad, List<XFile> images) async {
+    return createAd(ad, images);
+  }
+
   // ✅ Fetch user's ads
   Future<void> fetchUserAds(String userId) async {
     _isLoading = true;

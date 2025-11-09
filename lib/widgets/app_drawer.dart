@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:listynest/l10n/app_localizations.dart';
-import 'package:listynest/screens/main/home_screen.dart';
-import 'package:listynest/screens/user/profile_screen.dart';
+import 'package:listynest/screens/home/home_screen.dart';
+import 'package:listynest/screens/profile/profile_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:listynest/models/category_model.dart';
+import 'package:listynest/models/category.dart';
 import 'package:listynest/config/api_config.dart';
 
 class CategoryService {

@@ -24,6 +24,7 @@ class SearchProvider with ChangeNotifier {
 
   List<Ad> _ads = [];
   List<Ad> get ads => _ads;
+  List<Ad> get results => _ads;  // Alias for ads
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
@@ -31,10 +32,41 @@ class SearchProvider with ChangeNotifier {
   FilterOptions _filterOptions = FilterOptions();
   FilterOptions get filterOptions => _filterOptions;
 
+  // Individual filter getters for convenience
+  String? get searchQuery => _filterOptions.search;
+  String? get selectedCategory => _filterOptions.category?.name;
+  bool get isLoading => _state == SearchState.loading;
+
   void setFilterOptions(FilterOptions options) {
     _filterOptions = options;
     searchAds();
     notifyListeners();
+  }
+
+  // Convenience method for search with individual params
+  Future<void> search({
+    String? query,
+    String? category,
+    double? minPrice,
+    double? maxPrice,
+  }) async {
+    _state = SearchState.loading;
+    notifyListeners();
+
+    try {
+      _ads = await adService.fetchAds(
+        search: query,
+        category: category,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+      );
+      _state = SearchState.loaded;
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+      _state = SearchState.error;
+      notifyListeners();
+    }
   }
 
   void searchAds() {
@@ -58,6 +90,13 @@ class SearchProvider with ChangeNotifier {
       _state = SearchState.error;
       notifyListeners();
     });
+  }
+
+  void clearFilters() {
+    _filterOptions = FilterOptions();
+    _ads = [];
+    _state = SearchState.initial;
+    notifyListeners();
   }
 
   @override

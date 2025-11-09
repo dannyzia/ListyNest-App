@@ -403,11 +403,11 @@ class _PostAdScreenState extends State<PostAdScreen> {
           price: double.parse(_priceController.text),
           currency: _selectedCurrency,
           category: _selectedCategory,
-          location: {
-            'country': _countryController.text,
-            'state': _stateController.text,
-            'city': _cityController.text,
-          },
+          location: Location(
+            country: _countryController.text,
+            state: _stateController.text,
+            city: _cityController.text,
+          ),
           imageUrls: imageUrls,
           userId: authProvider.user!.uid,
           contactEmail: _emailController.text.isNotEmpty ? _emailController.text : null,
@@ -421,7 +421,7 @@ class _PostAdScreenState extends State<PostAdScreen> {
           updatedAt: DateTime.now(),
         );
 
-        await adProvider.postAd(ad);
+        await adProvider.postAd(ad, _selectedImages);
 
         if (mounted) {
           setState(() => _isSubmitting = false);

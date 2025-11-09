@@ -32,7 +32,10 @@ class MyApp extends StatelessWidget {
           create: (context) => AdProvider(adService: context.read<AdService>()),
           update: (context, adService, adProvider) => AdProvider(adService: adService),
         ),
-        ChangeNotifierProvider(create: (_) => SearchProvider()),
+        ChangeNotifierProxyProvider<AdService, SearchProvider>(
+          create: (context) => SearchProvider(adService: context.read<AdService>()),
+          update: (context, adService, searchProvider) => SearchProvider(adService: adService),
+        ),
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
       ],

@@ -1,5 +1,5 @@
 
-import 'package:listynest/models/category_model.dart';
+import 'package:listynest/models/category.dart';
 
 class FilterOptions {
   final String? search;

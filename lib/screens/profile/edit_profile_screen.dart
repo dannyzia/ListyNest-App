@@ -32,18 +32,14 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final user = authProvider.user;
 
-      if (user != null) {
-        final data = {
-          'name': _nameController.text,
-          'phone': _phoneController.text,
-        };
-
-        await authProvider.updateUser(user.uid, data);
-        if (mounted) {
-          Navigator.of(context).pop();
-        }
+      await authProvider.updateUser(
+        _nameController.text,
+        _phoneController.text.isEmpty ? null : _phoneController.text,
+      );
+      
+      if (mounted) {
+        Navigator.of(context).pop();
       }
     }
   }
