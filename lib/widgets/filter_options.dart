@@ -6,8 +6,8 @@ class FilterOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8.0),
-      child: Column(
+      padding: const EdgeInsets.all(8.0),
+      child: const Column(
         children: [
           Text('Filter Options'),
           // Add filter widgets here

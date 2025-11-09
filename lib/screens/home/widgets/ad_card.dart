@@ -15,10 +15,10 @@ class AdCard extends StatelessWidget {
             Container(
               height: 100,
               color: Colors.grey[400],
-              child: Center(child: Text('Ad Image')),
+              child: const Center(child: Text('Ad Image')),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text('Ad Title'),
             ),
           ],

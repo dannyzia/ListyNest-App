@@ -48,6 +48,8 @@ in {
     pkgs.gtk3
     pkgs.webkitgtk
     pkgs.glib
+    pkgs.json-glib
+    pkgs.lucene
     pkgs.pango
     pkgs.cairo
     pkgs.atk

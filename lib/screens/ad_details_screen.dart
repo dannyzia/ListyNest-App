@@ -9,13 +9,10 @@ class AdDetailsScreen extends StatefulWidget {
   const AdDetailsScreen({super.key, required this.adId});
 
   @override
-  _AdDetailsScreenState createState() => _AdDetailsScreenState();
+  State<AdDetailsScreen> createState() => _AdDetailsScreenState();
 }
 
 class _AdDetailsScreenState extends State<AdDetailsScreen> {
-  final _bidAmountController = TextEditingController();
-  bool _isBidding = false;
-
   @override
   void initState() {
     super.initState();
@@ -23,44 +20,6 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<AdProvider>(context, listen: false).fetchAdById(widget.adId);
     });
-  }
-
-  @override
-  void dispose() {
-    _bidAmountController.dispose();
-    super.dispose();
-  }
-
-  void _placeBid(BuildContext context) async {
-    final adProvider = Provider.of<AdProvider>(context, listen: false);
-    final amount = double.tryParse(_bidAmountController.text);
-
-    if (amount == null || amount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid bid amount.')),
-      );
-      return;
-    }
-
-    setState(() {
-      _isBidding = true;
-    });
-
-    try {
-      await adProvider.placeBid(widget.adId, amount);
-      _bidAmountController.clear();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Bid placed successfully!')),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to place bid: ${e.toString()}')),
-      );
-    } finally {
-      setState(() {
-        _isBidding = false;
-      });
-    }
   }
 
   @override
@@ -76,11 +35,11 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
       ),
       body: Consumer<AdProvider>(
         builder: (context, adProvider, child) {
-          if (adProvider.state == AdState.loading && adProvider.selectedAd == null) {
+          if (adProvider.isLoading && adProvider.selectedAd == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (adProvider.state == AdState.error) {
+          if (adProvider.errorMessage != null) {
             return Center(child: Text('Error: ${adProvider.errorMessage}'));
           }
 
@@ -114,23 +73,9 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 16.0),
-                  if (ad.isAuction)
-                    _buildAuctionDetails(context, ad)
-                  else
-                    Text(
-                      'Price: \$${ad.price.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  const SizedBox(height: 24.0),
-                  // Seller information
-                  const Text(
-                    'Seller Information',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8.0),
-                  const ListTile(
-                    leading: Icon(Icons.person),
-                    title: Text('John Doe'), // Replace with actual seller name
+                  Text(
+                    'Price: \$${ad.price.toStringAsFixed(2)}',
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],
               ),
@@ -138,51 +83,6 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
           );
         },
       ),
-    );
-  }
-
-  Widget _buildAuctionDetails(BuildContext context, Ad ad) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Starting Price: \$${ad.price.toStringAsFixed(2)}',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 8.0),
-        Text(
-          'Highest Bid: \$${ad.highestBid?.toStringAsFixed(2) ?? 'N/A'}',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.green),
-        ),
-        const SizedBox(height: 8.0),
-        Text(
-          'Auction Ends: ${ad.auctionEndDate?.toLocal().toString() ?? 'N/A'}',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        const SizedBox(height: 16.0),
-        Row(
-          children: [
-            Expanded(
-              child: TextFormField(
-                controller: _bidAmountController,
-                decoration: const InputDecoration(
-                  labelText: 'Your Bid',
-                  prefixText: '\$',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              ),
-            ),
-            const SizedBox(width: 8.0),
-            _isBidding
-                ? const CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: () => _placeBid(context),
-                    child: const Text('Place Bid'),
-                  ),
-          ],
-        ),
-      ],
     );
   }
 }

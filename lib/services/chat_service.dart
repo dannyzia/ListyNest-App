@@ -16,7 +16,7 @@ class ChatService {
           .snapshots()
           .map((snapshot) => snapshot.docs.map((doc) => Conversation.fromFirestore(doc)).toList());
     }
-    return Stream.empty();
+    return const Stream.empty();
   }
 
   Stream<List<ChatMessage>> getMessages(String conversationId) {

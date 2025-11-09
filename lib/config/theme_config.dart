@@ -16,20 +16,20 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     primaryColor: AppColors.primaryColor,
     scaffoldBackgroundColor: AppColors.backgroundColor,
-    colorScheme: ColorScheme.light(
+    colorScheme: const ColorScheme.light(
       primary: AppColors.primaryColor,
       secondary: AppColors.secondaryColor,
       error: AppColors.errorColor,
       surface: AppColors.surfaceColor,
     ),
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       displayLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
       displayMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
       bodyLarge: TextStyle(fontSize: 16, color: AppColors.textPrimary),
       bodyMedium: TextStyle(fontSize: 14, color: AppColors.textSecondary),
       labelSmall: TextStyle(fontSize: 12, color: AppColors.textSecondary),
     ),
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       backgroundColor: Colors.white,
       elevation: 1,
       iconTheme: IconThemeData(color: AppColors.textPrimary),
@@ -43,7 +43,7 @@ class AppTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryColor,
         foregroundColor: Colors.white,
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),

@@ -2,15 +2,9 @@ import 'package:flutter/material.dart';
 
 class DetailsStep extends StatelessWidget {
   final GlobalKey<FormState> formKey;
-  final TextEditingController titleController;
-  final TextEditingController descriptionController;
+  final Function(String, String) onChanged;
 
-  const DetailsStep({
-    super.key,
-    required this.formKey,
-    required this.titleController,
-    required this.descriptionController,
-  });
+  const DetailsStep({super.key, required this.formKey, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -19,28 +13,12 @@ class DetailsStep extends StatelessWidget {
       child: Column(
         children: [
           TextFormField(
-            controller: titleController,
-            decoration: InputDecoration(
-              labelText: 'Title',
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a title';
-              }
-              return null;
-            },
+            decoration: const InputDecoration(labelText: 'Title'),
+            onChanged: (value) => onChanged(value, ''),
           ),
           TextFormField(
-            controller: descriptionController,
-            decoration: InputDecoration(
-              labelText: 'Description',
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a description';
-              }
-              return null;
-            },
+            decoration: const InputDecoration(labelText: 'Description'),
+            onChanged: (value) => onChanged('', value),
           ),
         ],
       ),

@@ -6,10 +6,10 @@ class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
 
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  EditProfileScreenState createState() => EditProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _phoneController;
@@ -18,8 +18,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     final user = Provider.of<AuthProvider>(context, listen: false).user;
-    _nameController = TextEditingController(text: user?.name);
-    _phoneController = TextEditingController(text: user?.phone);
+    _nameController = TextEditingController(text: user?.displayName);
+    _phoneController = TextEditingController(text: user?.phoneNumber);
   }
 
   @override
@@ -40,8 +40,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           'phone': _phoneController.text,
         };
 
-        await authProvider.updateUser(user.id, data);
-        Navigator.of(context).pop();
+        await authProvider.updateUser(user.uid, data);
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
       }
     }
   }

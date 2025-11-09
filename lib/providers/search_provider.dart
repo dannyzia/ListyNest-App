@@ -1,7 +1,8 @@
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:listynest/models/ad_model.dart';
+import 'package:listynest/models/ad.dart';
 import 'package:listynest/models/filter_options.dart';
 import 'package:listynest/services/ad_service.dart';
 
@@ -41,19 +42,18 @@ class SearchProvider with ChangeNotifier {
     notifyListeners();
 
     _adSearchSubscription?.cancel();
-    _adSearchSubscription = adService
-        .searchAds(
+    adService
+        .fetchAds(
       search: _filterOptions.search,
-      category: _filterOptions.category,
-      location: _filterOptions.location,
+      category: _filterOptions.category?.name,
       minPrice: _filterOptions.minPrice,
       maxPrice: _filterOptions.maxPrice,
     )
-        .listen((ads) {
+        .then((ads) {
       _ads = ads;
       _state = SearchState.loaded;
       notifyListeners();
-    }, onError: (e) {
+    }).catchError((e) {
       _errorMessage = e.toString();
       _state = SearchState.error;
       notifyListeners();

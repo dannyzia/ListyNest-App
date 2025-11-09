@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:listynest/screens/my_ads/my_ads_screen.dart';
+import 'package:listynest/screens/profile/favorites_screen.dart';
+import 'package:listynest/screens/my_bids/my_bids_screen.dart';
 
 class MyAccountScreen extends StatelessWidget {
   const MyAccountScreen({super.key});
@@ -16,21 +18,21 @@ class MyAccountScreen extends StatelessWidget {
             leading: const Icon(Icons.list),
             title: const Text('My Ads'),
             onTap: () {
-              context.go('/my-ads');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const MyAdsScreen()));
             },
           ),
           ListTile(
             leading: const Icon(Icons.favorite),
             title: const Text('My Favorites'),
             onTap: () {
-              context.go('/my-favorites');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoritesScreen()));
             },
           ),
           ListTile(
             leading: const Icon(Icons.gavel),
             title: const Text('My Bids'),
             onTap: () {
-              context.go('/my-bids');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const MyBidsScreen()));
             },
           ),
         ],

@@ -18,17 +18,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Profile'),
+        title: const Text('My Profile'),
       ),
       body: StreamBuilder<UserProfile>(
         stream: _userProfileService.getUserProfile(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text('Something went wrong');
+            return const Text('Something went wrong');
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           final userProfile = snapshot.data!;
@@ -41,19 +41,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               children: [
                 TextField(
                   controller: _nameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Name',
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 TextField(
                   controller: _emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Email',
                   ),
                   readOnly: true,
                 ),
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: () async {
                     final updatedProfile = UserProfile(
@@ -63,10 +63,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     );
                     await _userProfileService.updateUserProfile(updatedProfile);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Profile updated successfully!')),
+                      const SnackBar(content: Text('Profile updated successfully!')),
                     );
                   },
-                  child: Text('Save'),
+                  child: const Text('Save'),
                 ),
               ],
             ),

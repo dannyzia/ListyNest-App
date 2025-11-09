@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:listynest/models/conversation.dart';
 import 'package:listynest/services/chat_service.dart';
+import 'chat_screen.dart';
 
 class ConversationsScreen extends StatelessWidget {
   final ChatService _chatService = ChatService();
@@ -12,17 +12,17 @@ class ConversationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Messages'),
+        title: const Text('Messages'),
       ),
       body: StreamBuilder<List<Conversation>>(
         stream: _chatService.getConversations(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text('Something went wrong');
+            return const Text('Something went wrong');
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           final conversations = snapshot.data!;
@@ -33,7 +33,12 @@ class ConversationsScreen extends StatelessWidget {
               final conversation = conversations[index];
               return ListTile(
                 title: Text(conversation.lastMessage),
-                onTap: () => context.go('/chat/${conversation.id}'),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatScreen(conversationId: conversation.id),
+                  ),
+                ),
               );
             },
           );

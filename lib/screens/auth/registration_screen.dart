@@ -24,20 +24,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Future<void> _register() async {
-    if (_formKey.currentState!.validate()) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      try {
-        await authProvider.register(
-          _nameController.text,
-          _emailController.text,
-          _passwordController.text,
-        );
-        Navigator.pop(context); // Go back to login screen
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
-      }
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final navigator = Navigator.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      await authProvider.register(
+        _emailController.text,
+        _passwordController.text,
+      );
+      await authProvider.updateUser(_nameController.text, null);
+      navigator.pop(); // Go back to login screen
+    } catch (e) {
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
     }
   }
 
@@ -56,18 +61,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: 'Name'),
-                validator: (value) => value!.isEmpty ? 'Please enter your name' : null,
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter your name' : null,
               ),
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: 'Email'),
-                validator: (value) => value!.isEmpty ? 'Please enter your email' : null,
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter your email' : null,
               ),
               TextFormField(
                 controller: _passwordController,
                 decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
-                validator: (value) => value!.isEmpty ? 'Please enter your password' : null,
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter your password' : null,
               ),
               const SizedBox(height: 20),
               ElevatedButton(

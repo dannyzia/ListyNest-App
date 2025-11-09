@@ -13,10 +13,10 @@ class TopPickCard extends StatelessWidget {
           width: 50,
           height: 50,
           color: Colors.grey[400],
-          child: Center(child: Text('Image')),
+          child: const Center(child: Text('Image')),
         ),
-        title: Text('Top Pick Title'),
-        subtitle: Text('Top Pick Subtitle'),
+        title: const Text('Top Pick Title'),
+        subtitle: const Text('Top Pick Subtitle'),
         onTap: () {
           // Handle tap
         },

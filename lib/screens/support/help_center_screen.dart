@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class MyAdsScreen extends StatelessWidget {
-  const MyAdsScreen({super.key});
+class HelpCenterScreen extends StatelessWidget {
+  const HelpCenterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Ads'),
+        title: const Text('Help Center'),
       ),
       body: const Center(
-        child: Text('My Ads Screen'),
+        child: Text('Help Center Screen'),
       ),
     );
   }

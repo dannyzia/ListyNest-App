@@ -1,4 +1,5 @@
-import 'package:listynest/models/ad_model.dart';
+
+import 'package:listynest/models/ad.dart';
 
 class Favorite {
   final String id;
@@ -11,7 +12,7 @@ class Favorite {
     return Favorite(
       id: json['_id'],
       userId: json['user'],
-      ad: Ad.fromJson(json['ad'] as Map<String, dynamic>),
+      ad: Ad.fromJson(json['ad']),
     );
   }
 }

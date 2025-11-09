@@ -1,5 +1,6 @@
+
 import 'package:flutter/material.dart';
-import 'package:listynest/models/ad_model.dart';
+import 'package:listynest/models/ad.dart';
 
 class AddAdForm extends StatefulWidget {
   final Function(Ad) onAdAdded;
@@ -24,7 +25,7 @@ class _AddAdFormState extends State<AddAdForm> {
         children: [
           TextFormField(
             controller: _titleController,
-            decoration: InputDecoration(labelText: 'Title'),
+            decoration: const InputDecoration(labelText: 'Title'),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter a title';
@@ -34,7 +35,7 @@ class _AddAdFormState extends State<AddAdForm> {
           ),
           TextFormField(
             controller: _descriptionController,
-            decoration: InputDecoration(labelText: 'Description'),
+            decoration: const InputDecoration(labelText: 'Description'),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter a description';
@@ -44,7 +45,7 @@ class _AddAdFormState extends State<AddAdForm> {
           ),
           TextFormField(
             controller: _priceController,
-            decoration: InputDecoration(labelText: 'Price'),
+            decoration: const InputDecoration(labelText: 'Price'),
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -62,9 +63,9 @@ class _AddAdFormState extends State<AddAdForm> {
                   description: _descriptionController.text,
                   price: double.parse(_priceController.text),
                   category: '', // You might want to add a category field
-                  location: '', // You might want to add a location field
-                  images: [],
-                  expiresAt: DateTime.now().add(Duration(days: 30)),
+                  location: Location(country: '', state: '', city: '' ), // You might want to add a location field
+                  imageUrls: [],
+                  expiresAt: DateTime.now().add(const Duration(days: 30)),
                   createdAt: DateTime.now(),
                   updatedAt: DateTime.now(), userId: '', // The user ID will be set in the provider
 
@@ -72,7 +73,7 @@ class _AddAdFormState extends State<AddAdForm> {
                 widget.onAdAdded(ad);
               }
             },
-            child: Text('Add Ad'),
+            child: const Text('Add Ad'),
           ),
         ],
       ),

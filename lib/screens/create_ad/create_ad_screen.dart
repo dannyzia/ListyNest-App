@@ -1,140 +1,101 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
 import 'package:listynest/models/ad.dart';
 import 'package:listynest/providers/ad_provider.dart';
-import 'package:listynest/screens/create_ad/widgets/details_step.dart';
-import 'package:listynest/screens/create_ad/widgets/photos_step.dart';
-import 'package:listynest/screens/create_ad/widgets/price_step.dart';
-import 'package:provider/provider.dart';
+import 'package:listynest/providers/auth_provider.dart';
+import 'package:listynest/screens/home/home_screen.dart';
+
+import 'widgets/details_step.dart';
+import 'widgets/photos_step.dart';
+import 'widgets/price_step.dart';
 
 class CreateAdScreen extends StatefulWidget {
   const CreateAdScreen({super.key});
 
   @override
-  _CreateAdScreenState createState() => _CreateAdScreenState();
+  State<CreateAdScreen> createState() => _CreateAdScreenState();
 }
 
 class _CreateAdScreenState extends State<CreateAdScreen> {
-  int _currentStep = 0;
   final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _priceController = TextEditingController();
+  String _title = '';
+  String _description = '';
+  double _price = 0.0;
   List<XFile> _images = [];
-  bool _isLoading = false;
 
   void _publishAd() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+    if (!_formKey.currentState!.validate()) return;
 
-      final ad = Ad(
-        id: ' ',
-        title: _titleController.text,
-        description: _descriptionController.text,
-        price: double.parse(_priceController.text),
-        images: _images.map((xfile) => AdImage(url: xfile.path)).toList(),
-        userId: ' ',
-        category: ' ',
-        location: ' ',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        expiresAt: DateTime.now(),
-      );
+    final adProvider = Provider.of<AdProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-      try {
-        await Provider.of<AdProvider>(context, listen: false).createAd(ad);
+    final ad = Ad(
+      id: '',
+      title: _title,
+      description: _description,
+      price: _price,
+      userId: authProvider.user!.uid,
+      imageUrls: [],
+    );
 
-        if (mounted) {
-          context.go('/listings');
-        }
-      } catch (e) {
-        // Handle error
-      } finally {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      }
+    await adProvider.createAd(ad, _images);
+
+    if (adProvider.errorMessage == null && mounted) {
+       Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final adProvider = Provider.of<AdProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create New Listing'),
       ),
-      body: _isLoading
+      body: adProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
-          : Stepper(
-              controlsBuilder: (BuildContext context, StepperControls controls) {
-                final isLastStep = _currentStep == 2;
-                return Row(
-                  children: <Widget>[
-                    if (isLastStep)
-                      ElevatedButton(
-                        onPressed: _publishAd,
-                        child: const Text('PUBLISH'),
-                      )
-                    else
-                      TextButton(
-                        onPressed: controls.onStepContinue,
-                        child: const Text('NEXT'),
-                      ),
-                    TextButton(
-                      onPressed: controls.onStepCancel,
-                      child: const Text('BACK'),
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  children: [
+                    DetailsStep(
+                      formKey: _formKey,
+                      onChanged: (title, description) {
+                        setState(() {
+                          _title = title;
+                          _description = description;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    PhotosStep(
+                      onImagesSelected: (images) {
+                        setState(() {
+                          _images = images;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    PriceStep(
+                      onChanged: (price) {
+                        setState(() {
+                          _price = price;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _publishAd,
+                      child: const Text('Publish'),
                     ),
                   ],
-                );
-              },
-              currentStep: _currentStep,
-              onStepContinue: () {
-                final isLastStep = _currentStep == 2;
-                if (!isLastStep) {
-                  setState(() {
-                    _currentStep += 1;
-                  });
-                }
-              },
-              onStepCancel: () {
-                if (_currentStep > 0) {
-                  setState(() {
-                    _currentStep -= 1;
-                  });
-                }
-              },
-              steps: [
-                Step(
-                  title: const Text('Details'),
-                  content: DetailsStep(
-                    formKey: _formKey,
-                    titleController: _titleController,
-                    descriptionController: _descriptionController,
-                  ),
-                  isActive: _currentStep >= 0,
                 ),
-                Step(
-                  title: const Text('Photos'),
-                  content: PhotosStep(
-                    onImagesSelected: (images) {
-                      _images = images;
-                    },
-                  ),
-                  isActive: _currentStep >= 1,
-                ),
-                Step(
-                  title: const Text('Price'),
-                  content: PriceStep(
-                    priceController: _priceController,
-                  ),
-                  isActive: _currentStep >= 2,
-                ),
-              ],
+              ),
             ),
     );
   }

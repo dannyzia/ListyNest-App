@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class MyAdsScreen extends StatelessWidget {
-  const MyAdsScreen({super.key});
+class PrivacyPolicyScreen extends StatelessWidget {
+  const PrivacyPolicyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Ads'),
+        title: const Text('Privacy Policy'),
       ),
       body: const Center(
-        child: Text('My Ads Screen'),
+        child: Text('Privacy Policy Screen'),
       ),
     );
   }

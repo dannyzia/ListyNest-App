@@ -1,62 +1,80 @@
+// lib/screens/user/my_ads_screen.dart
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:listynest/providers/ad_provider.dart';
-import 'package:listynest/widgets/ad_card.dart';
+import '../../providers/ad_provider.dart';
+import '../../providers/auth_provider.dart';
+import '../../widgets/ad_card.dart';
 
 class MyAdsScreen extends StatefulWidget {
   const MyAdsScreen({super.key});
 
   @override
-  _MyAdsScreenState createState() => _MyAdsScreenState();
+  State<MyAdsScreen> createState() => _MyAdsScreenState();
 }
 
 class _MyAdsScreenState extends State<MyAdsScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch user's ads when the screen is initialized
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AdProvider>(context, listen: false).fetchUserAds();
+      final authProvider = context.read<AuthProvider>();
+      if (authProvider.user != null) {
+        context.read<AdProvider>().fetchUserAds(authProvider.user!.uid);
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final adProvider = context.watch<AdProvider>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Ads'),
       ),
-      body: Consumer<AdProvider>(
-        builder: (context, adProvider, child) {
-          if (adProvider.state == AdState.loading) {
-            return const Center(child: CircularProgressIndicator());
+      body: RefreshIndicator(
+        onRefresh: () async {
+          final authProvider = context.read<AuthProvider>();
+          if (authProvider.user != null) {
+            await adProvider.fetchUserAds(authProvider.user!.uid);
           }
-
-          if (adProvider.state == AdState.error) {
-            return Center(child: Text('Error: ${adProvider.errorMessage}'));
-          }
-
-          if (adProvider.userAds.isEmpty) {
-            return const Center(
-              child: Text('You have not created any ads yet.'),
-            );
-          }
-
-          return ListView.builder(
-            itemCount: adProvider.userAds.length,
-            itemBuilder: (context, index) {
-              final ad = adProvider.userAds[index];
-              return AdCard(ad: ad);
-            },
-          );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.go('/ad/new');
-        },
-        child: const Icon(Icons.add),
+        child: adProvider.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : adProvider.ads.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.inbox, size: 64, color: Colors.grey),
+                        const SizedBox(height: 16),
+                        const Text('No ads yet', style: TextStyle(fontSize: 18)),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Start by posting your first ad',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () => Navigator.pushNamed(context, '/post-ad'),
+                          child: const Text('Post Ad'),
+                        ),
+                      ],
+                    ),
+                  )
+                : GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.75,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemCount: adProvider.ads.length,
+                    itemBuilder: (context, index) {
+                      return AdCard(ad: adProvider.ads[index]);
+                    },
+                  ),
       ),
     );
   }

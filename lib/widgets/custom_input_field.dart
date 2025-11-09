@@ -15,7 +15,7 @@ class CustomInputField extends StatelessWidget {
       obscureText: isPassword,
       decoration: InputDecoration(
         labelText: labelText,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       validator: validator,
     );

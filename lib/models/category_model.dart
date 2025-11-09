@@ -1,13 +1,23 @@
+
 class Category {
   final String id;
   final String name;
+  final String? icon;
 
-  Category({required this.id, required this.name});
+  Category({
+    required this.id,
+    required this.name,
+    this.icon,
+  });
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
-      id: json['_id'],
-      name: json['name'],
+      id: json['_id'] ?? json['id'] ?? '',
+      name: json['name'] ?? '',
+      icon: json['icon'],
     );
   }
+
+  @override
+  String toString() => name;
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:listynest/screens/home_screen.dart';
-import 'package:listynest/screens/user/favorites_screen.dart';
 import 'package:listynest/screens/user/my_ads_screen.dart';
 import 'package:listynest/screens/user/my_account_screen.dart';
 
@@ -8,17 +7,17 @@ class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    FavoritesScreen(),
-    MyAdsScreen(),
-    MyAccountScreen(),
+  static final List<Widget> _widgetOptions = <Widget>[
+    const HomeScreen(),
+    const Placeholder(), // FavoritesScreen(),
+    const MyAdsScreen(),
+    const MyAccountScreen(),
   ];
 
   void _onItemTapped(int index) {

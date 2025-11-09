@@ -31,7 +31,7 @@ class _ScrollDownHintState extends State<ScrollDownHint> with SingleTickerProvid
           child: child,
         );
       },
-      child: Column(
+      child: const Column(
         children: [
           Text('Scroll down to see ads'),
           Icon(Icons.arrow_downward),

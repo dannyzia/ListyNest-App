@@ -13,7 +13,7 @@ class UserProfileService {
             (snapshot) => UserProfile.fromMap(snapshot.data() as Map<String, dynamic>, user.uid),
           );
     }
-    return Stream.empty();
+    return const Stream.empty();
   }
 
   Future<void> updateUserProfile(UserProfile userProfile) async {

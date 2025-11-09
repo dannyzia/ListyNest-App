@@ -8,7 +8,7 @@ class SearchResults extends StatelessWidget {
     return Expanded(
       child: ListView.builder(
         itemBuilder: (context, index) {
-          return ListTile(
+          return const ListTile(
             title: Text('Search Result'),
           );
         },

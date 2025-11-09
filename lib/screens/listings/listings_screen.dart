@@ -1,41 +1,37 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:listynest/models/ad.dart';
-import 'package:listynest/services/ad_service.dart';
-import 'package:listynest/services/auth_service.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/auth_provider.dart';
+import '../../providers/search_provider.dart';
+import '../../widgets/ad_card.dart';
+import '../profile/profile_screen.dart';
+import '../my_ads/my_ads_screen.dart';
+import '../profile/favorites_screen.dart';
+import '../user/conversations_screen.dart';
+import '../create_ad/create_ad_screen.dart';
 
 class ListingsScreen extends StatefulWidget {
   const ListingsScreen({super.key});
 
   @override
-  _ListingsScreenState createState() => _ListingsScreenState();
+  State<ListingsScreen> createState() => _ListingsScreenState();
 }
 
 class _ListingsScreenState extends State<ListingsScreen> {
-  final AdService _adService = AdService();
-  final AuthService _authService = AuthService();
   final _searchController = TextEditingController();
-  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(() {
-      setState(() {
-        _searchQuery = _searchController.text;
-      });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<SearchProvider>(context, listen: false).searchAds();
     });
   }
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Browse Listings'),
@@ -44,25 +40,23 @@ class _ListingsScreenState extends State<ListingsScreen> {
             itemBuilder: (context) => [
               PopupMenuItem(
                 child: const Text('My Profile'),
-                onTap: () => context.go('/profile'),
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen())),
               ),
               PopupMenuItem(
                 child: const Text('My Ads'),
-                onTap: () => context.go('/my_ads'),
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyAdsScreen())),
               ),
               PopupMenuItem(
                 child: const Text('Favorites'),
-                onTap: () => context.go('/favorites'),
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoritesScreen())),
               ),
               PopupMenuItem(
                 child: const Text('Messages'),
-                onTap: () => context.go('/conversations'),
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ConversationsScreen())),
               ),
               PopupMenuItem(
                 child: const Text('Sign Out'),
-                onTap: () async {
-                  await _authService.signOut();
-                },
+                onTap: () => authProvider.logout(),
               ),
             ],
           ),
@@ -74,14 +68,20 @@ class _ListingsScreenState extends State<ListingsScreen> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: _searchController,
+              onChanged: (value) {
+                final searchProvider = Provider.of<SearchProvider>(context, listen: false);
+                searchProvider.setFilterOptions(searchProvider.filterOptions.copyWith(search: value));
+              },
               decoration: InputDecoration(
                 hintText: 'Search for listings...',
                 prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchQuery.isNotEmpty
+                suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () {
                           _searchController.clear();
+                          final searchProvider = Provider.of<SearchProvider>(context, listen: false);
+                          searchProvider.setFilterOptions(searchProvider.filterOptions.copyWith(search: ''));
                         },
                       )
                     : null,
@@ -90,22 +90,17 @@ class _ListingsScreenState extends State<ListingsScreen> {
             ),
           ),
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _adService.getAds(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return const Text('Something went wrong');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
+            child: Consumer<SearchProvider>(
+              builder: (context, searchProvider, child) {
+                if (searchProvider.state == SearchState.loading) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                final ads = snapshot.data!.docs
-                    .map((doc) => Ad.fromFirestore(doc))
-                    .where((ad) {
-                  return ad.title.toLowerCase().contains(_searchQuery.toLowerCase());
-                }).toList();
+                if (searchProvider.state == SearchState.error) {
+                  return Center(child: Text(searchProvider.errorMessage ?? 'An error occurred'));
+                }
+
+                final ads = searchProvider.ads;
 
                 return GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -115,19 +110,7 @@ class _ListingsScreenState extends State<ListingsScreen> {
                   itemCount: ads.length,
                   itemBuilder: (context, index) {
                     final ad = ads[index];
-                    return InkWell(
-                      onTap: () => context.go('/ad/${ad.id}'),
-                      child: Card(
-                        child: Column(
-                          children: [
-                            if (ad.imageUrls.isNotEmpty)
-                              Image.network(ad.imageUrls[0], height: 100, fit: BoxFit.cover),
-                            Text(ad.title),
-                            Text('\$${ad.price}'),
-                          ],
-                        ),
-                      ),
-                    );
+                    return AdCard(ad: ad);
                   },
                 );
               },
@@ -136,7 +119,7 @@ class _ListingsScreenState extends State<ListingsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.go('/create_ad'),
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const CreateAdScreen())),
         child: const Icon(Icons.add),
       ),
     );

@@ -34,7 +34,7 @@ class FavoriteService {
     if (user != null) {
       return _firestore.collection('favorites').where('userId', isEqualTo: user.uid).snapshots();
     }
-    return Stream.empty();
+    return const Stream.empty();
   }
 
   Stream<bool> isFavorite(String adId) {

@@ -9,7 +9,7 @@ class ImageUploader extends StatelessWidget {
       height: 150,
       width: double.infinity,
       color: Colors.grey[300],
-      child: Center(
+      child: const Center(
         child: Text('Image Uploader'),
       ),
     );

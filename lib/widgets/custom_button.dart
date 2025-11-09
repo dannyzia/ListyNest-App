@@ -14,7 +14,7 @@ class CustomButton extends StatelessWidget {
       onPressed: isLoading ? null : onPressed,
       style: AppTheme.lightTheme.elevatedButtonTheme.style,
       child: isLoading
-          ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+          ? const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
           : Text(text),
     );
   }

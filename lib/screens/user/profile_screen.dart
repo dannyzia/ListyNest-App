@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:listynest/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:listynest/screens/settings/settings_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -25,7 +25,7 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                context.go('/settings');
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));
               },
               child: const Text('Settings'),
             ),

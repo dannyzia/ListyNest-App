@@ -1,44 +1,72 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
+# -------------------------
+# OS / Editor junk
+# -------------------------
 .DS_Store
+*.swp
+*.swo
+*.log
+.idea/
+*.iml
+*.ipr
+*.iws
 .atom/
 .buildlog/
 .history
 .svn/
 migrate_working_dir/
 
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
-.idea/
+# -------------------------
+# VS Code
+# -------------------------
+# Uncomment next line if you don’t want local VS Code settings committed
+# .vscode/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
+# -------------------------
+# Flutter / Dart
+# -------------------------
 **/doc/api/
-**/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
 .packages
 .pub-cache/
 .pub/
-/build/
-
-# Symbolication related
+build/
+**/ios/Flutter/.last_build_id
 app.*.symbols
-
-# Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
+# Android build artifacts
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# -------------------------
+# Firebase / Node.js Functions
+# -------------------------
+functions/node_modules/
+functions/.runtimeconfig.json
+functions/lib/  # if you compile TS -> JS, you can add or remove depending on setup
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+.firebaserc  # optional: include if you don’t want project IDs public
+
+# -------------------------
+# Environment / Secrets
+# -------------------------
+.env
+.env.*
+*.secret
+*.key
+*.pem
+*.crt
+serviceAccount.json
+service-account.json
+firebase-service-account.json
+
+# -------------------------
+# OS-specific
+# -------------------------
+Thumbs.db
+ehthumbs.db
