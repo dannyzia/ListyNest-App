@@ -28,7 +28,7 @@ class _PostAdScreenState extends State<PostAdScreen> {
   String _selectedCategory = 'Electronics';
   String _selectedCurrency = 'USD';
 
-  final List<File> _selectedImages = [];
+  final List<XFile> _selectedImages = [];
   final ImagePicker _picker = ImagePicker();
   bool _isSubmitting = false;
 
@@ -89,7 +89,7 @@ class _PostAdScreenState extends State<PostAdScreen> {
 
               // Category Dropdown
               DropdownButtonFormField<String>(
-                value: _selectedCategory,
+                initialValue: _selectedCategory,
                 decoration: const InputDecoration(
                   labelText: 'Category',
                   border: OutlineInputBorder(),
@@ -172,7 +172,7 @@ class _PostAdScreenState extends State<PostAdScreen> {
                   Expanded(
                     flex: 1,
                     child: DropdownButtonFormField<String>(
-                      value: _selectedCurrency,
+                      initialValue: _selectedCurrency,
                       decoration: const InputDecoration(
                         labelText: 'Currency',
                         border: OutlineInputBorder(),
@@ -300,7 +300,7 @@ class _PostAdScreenState extends State<PostAdScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
-                      image: FileImage(image),
+                      image: FileImage(File(image.path)),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -372,7 +372,7 @@ class _PostAdScreenState extends State<PostAdScreen> {
 
     if (pickedFile != null) {
       setState(() {
-        _selectedImages.add(File(pickedFile.path));
+        _selectedImages.add(pickedFile);
       });
     }
   }

@@ -119,8 +119,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                           _selectedState = newValue;
                           _selectedCity = null;
                         });
-                        if (newValue != null) {
-                          locationProvider.fetchCities(newValue);
+                        if (newValue != null && _selectedCountry != null) {
+                          locationProvider.fetchCities(_selectedCountry!, newValue);
                         }
                       },
                       items: locationProvider.states.map((String state) {

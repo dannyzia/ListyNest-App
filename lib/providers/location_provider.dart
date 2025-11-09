@@ -55,13 +55,13 @@ class LocationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchCities(String state) async {
+  Future<void> fetchCities(String country, String state) async {
     _isLoading = true;
     _selectedState = state;
     _cities = [];
     notifyListeners();
     try {
-      _cities = await _locationService.getCities(state);
+      _cities = await _locationService.getCities(country, state);
     } catch (e) {
       // Handle error
     }
