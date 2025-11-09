@@ -6,6 +6,8 @@ import 'package:listynest/services/chat_service.dart';
 class ConversationsScreen extends StatelessWidget {
   final ChatService _chatService = ChatService();
 
+  ConversationsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

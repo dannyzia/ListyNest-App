@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 class PhotosStep extends StatefulWidget {
   final Function(List<XFile>) onImagesSelected;
 
-  const PhotosStep({Key? key, required this.onImagesSelected}) : super(key: key);
+  const PhotosStep({super.key, required this.onImagesSelected});
 
   @override
   _PhotosStepState createState() => _PhotosStepState();
@@ -17,14 +17,12 @@ class _PhotosStepState extends State<PhotosStep> {
   List<XFile> _images = [];
 
   Future<void> _pickImages() async {
-    final List<XFile>? pickedImages = await _picker.pickMultiImage();
-    if (pickedImages != null) {
-      setState(() {
-        _images = pickedImages;
-      });
-      widget.onImagesSelected(_images);
+    final List<XFile> pickedImages = await _picker.pickMultiImage();
+    setState(() {
+      _images = pickedImages;
+    });
+    widget.onImagesSelected(_images);
     }
-  }
 
   @override
   Widget build(BuildContext context) {

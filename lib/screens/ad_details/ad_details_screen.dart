@@ -6,11 +6,13 @@ import 'package:listynest/models/bid.dart';
 import 'package:listynest/services/ad_service.dart';
 import 'package:listynest/services/bidding_service.dart';
 import 'package:listynest/services/chat_service.dart';
+import 'package:provider/provider.dart';
+import 'package:listynest/providers/auth_provider.dart';
 
 class AdDetailsScreen extends StatefulWidget {
   final String adId;
 
-  AdDetailsScreen({required this.adId});
+  const AdDetailsScreen({super.key, required this.adId});
 
   @override
   _AdDetailsScreenState createState() => _AdDetailsScreenState();
@@ -24,6 +26,7 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Ad Details'),
@@ -44,14 +47,14 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
           return SingleChildScrollView(
             child: Column(
               children: [
-                if (ad.imageUrls.isNotEmpty)
+                if (ad.images.isNotEmpty)
                   SizedBox(
                     height: 300,
                     child: PageView.builder(
-                      itemCount: ad.imageUrls.length,
+                      itemCount: ad.images.length,
                       itemBuilder: (context, index) {
                         return Image.network(
-                          ad.imageUrls[index],
+                          ad.images[index].url,
                           fit: BoxFit.cover,
                         );
                       },
@@ -64,12 +67,12 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
                     children: [
                       Text(
                         ad.title,
-                        style: Theme.of(context).textTheme.headline5,
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       SizedBox(height: 8),
                       Text(
                         '\$${ad.price}',
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                       SizedBox(height: 16),
                       Text(ad.description),
@@ -77,14 +80,14 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
                       ElevatedButton(
                         onPressed: () async {
                           final conversationId = await _chatService.createConversation(ad.userId);
-                          context.go('/chat/$conversationId');
+                          GoRouter.of(context).go('/chat/$conversationId');
                         },
                         child: Text('Contact Seller'),
                       ),
                       SizedBox(height: 16),
                       Text(
                         'Bids',
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                       StreamBuilder<List<Bid>>(
                         stream: _biddingService.getBids(widget.adId),
@@ -129,6 +132,7 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
                               _biddingService.placeBid(
                                 widget.adId,
                                 double.parse(_bidController.text),
+                                authProvider.user!.id,
                               );
                               _bidController.clear();
                             },

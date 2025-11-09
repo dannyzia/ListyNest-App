@@ -58,7 +58,7 @@ class _AdDetailScreenState extends State<AdDetailScreen> {
           TextButton(
             child: const Text('Report'),
             onPressed: () {
-              Provider.of<AdProvider>(context, listen: false).reportAd(ad.id);
+              Provider.of<AdProvider>(context, listen: false).reportAd(ad.id, 'General report');
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Ad reported successfully.')),
@@ -89,7 +89,7 @@ class _AdDetailScreenState extends State<AdDetailScreen> {
             child: const Text('Place Bid'),
             onPressed: () {
               final amount = double.tryParse(_bidController.text);
-              final userId = Provider.of<AuthProvider>(context, listen: false).user!.uid;
+              final userId = Provider.of<AuthProvider>(context, listen: false).user!.id;
               if (amount != null) {
                 Provider.of<AuctionProvider>(context, listen: false)
                     .placeBid(ad.id, amount, userId);
@@ -162,7 +162,7 @@ class _AdDetailScreenState extends State<AdDetailScreen> {
                         Text(
                           '${ad.price} ${ad.currency}',
                           style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context).colorScheme.primary,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),

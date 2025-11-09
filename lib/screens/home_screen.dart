@@ -89,11 +89,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Consumer<AdProvider>(
               builder: (context, adProvider, child) {
-                if (adProvider.state == AdState.loading) {
+                if (adProvider.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (adProvider.state == AdState.error) {
+                if (adProvider.errorMessage != null) {
                   return Center(child: Text('Error: ${adProvider.errorMessage}'));
                 }
 

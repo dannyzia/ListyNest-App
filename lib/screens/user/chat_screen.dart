@@ -5,7 +5,7 @@ import 'package:listynest/services/chat_service.dart';
 class ChatScreen extends StatefulWidget {
   final String conversationId;
 
-  ChatScreen({required this.conversationId});
+  const ChatScreen({super.key, required this.conversationId});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();

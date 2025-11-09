@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TopPickCard extends StatelessWidget {
+  const TopPickCard({super.key});
+
   // Top pick model will be passed here
 
   @override

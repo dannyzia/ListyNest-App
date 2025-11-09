@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:listynest/models/ad.dart';
+import 'package:listynest/providers/ad_provider.dart';
 import 'package:listynest/screens/create_ad/widgets/details_step.dart';
 import 'package:listynest/screens/create_ad/widgets/photos_step.dart';
 import 'package:listynest/screens/create_ad/widgets/price_step.dart';
-import 'package:listynest/services/ad_service.dart';
+import 'package:provider/provider.dart';
 
 class CreateAdScreen extends StatefulWidget {
+  const CreateAdScreen({super.key});
+
   @override
   _CreateAdScreenState createState() => _CreateAdScreenState();
 }
@@ -19,7 +23,6 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
   final _priceController = TextEditingController();
   List<XFile> _images = [];
   bool _isLoading = false;
-  final AdService _adService = AdService();
 
   void _publishAd() async {
     if (_formKey.currentState!.validate()) {
@@ -27,18 +30,35 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
         _isLoading = true;
       });
 
-      await _adService.uploadAd(
-        _titleController.text,
-        _descriptionController.text,
-        double.parse(_priceController.text),
-        _images,
+      final ad = Ad(
+        id: ' ',
+        title: _titleController.text,
+        description: _descriptionController.text,
+        price: double.parse(_priceController.text),
+        images: _images.map((xfile) => AdImage(url: xfile.path)).toList(),
+        userId: ' ',
+        category: ' ',
+        location: ' ',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        expiresAt: DateTime.now(),
       );
 
-      setState(() {
-        _isLoading = false;
-      });
+      try {
+        await Provider.of<AdProvider>(context, listen: false).createAd(ad);
 
-      context.go('/listings');
+        if (mounted) {
+          context.go('/listings');
+        }
+      } catch (e) {
+        // Handle error
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
     }
   }
 
@@ -46,12 +66,12 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create New Listing'),
+        title: const Text('Create New Listing'),
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Stepper(
-              controlsBuilder: (BuildContext context, ControlsDetails details) {
+              controlsBuilder: (BuildContext context, StepperControls controls) {
                 final isLastStep = _currentStep == 2;
                 return Row(
                   children: <Widget>[
@@ -62,11 +82,11 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       )
                     else
                       TextButton(
-                        onPressed: details.onStepContinue,
+                        onPressed: controls.onStepContinue,
                         child: const Text('NEXT'),
                       ),
                     TextButton(
-                      onPressed: details.onStepCancel,
+                      onPressed: controls.onStepCancel,
                       child: const Text('BACK'),
                     ),
                   ],
@@ -90,7 +110,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
               },
               steps: [
                 Step(
-                  title: Text('Details'),
+                  title: const Text('Details'),
                   content: DetailsStep(
                     formKey: _formKey,
                     titleController: _titleController,
@@ -99,7 +119,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                   isActive: _currentStep >= 0,
                 ),
                 Step(
-                  title: Text('Photos'),
+                  title: const Text('Photos'),
                   content: PhotosStep(
                     onImagesSelected: (images) {
                       _images = images;
@@ -108,7 +128,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                   isActive: _currentStep >= 1,
                 ),
                 Step(
-                  title: Text('Price'),
+                  title: const Text('Price'),
                   content: PriceStep(
                     priceController: _priceController,
                   ),

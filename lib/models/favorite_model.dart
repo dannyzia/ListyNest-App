@@ -11,7 +11,7 @@ class Favorite {
     return Favorite(
       id: json['_id'],
       userId: json['user'],
-      ad: Ad.fromJson(json['ad']),
+      ad: Ad.fromJson(json['ad'] as Map<String, dynamic>),
     );
   }
 }

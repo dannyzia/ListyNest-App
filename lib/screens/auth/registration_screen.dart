@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/auth_provider.dart';
+import 'package:listynest/providers/auth_provider.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -28,9 +28,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       try {
         await authProvider.register(
-          name: _nameController.text,
-          email: _emailController.text,
-          password: _passwordController.text,
+          _nameController.text,
+          _emailController.text,
+          _passwordController.text,
         );
         Navigator.pop(context); // Go back to login screen
       } catch (e) {

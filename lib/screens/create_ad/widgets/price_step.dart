@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PriceStep extends StatelessWidget {
   final TextEditingController priceController;
 
-  const PriceStep({Key? key, required this.priceController}) : super(key: key);
+  const PriceStep({super.key, required this.priceController});
 
   @override
   Widget build(BuildContext context) {

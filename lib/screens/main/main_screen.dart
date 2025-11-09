@@ -5,6 +5,8 @@ import '../screens/home/home_screen.dart';
 import '../screens/auth/login_screen.dart';
 
 class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(

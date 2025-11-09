@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ScrollDownHint extends StatefulWidget {
+  const ScrollDownHint({super.key});
+
   @override
   _ScrollDownHintState createState() => _ScrollDownHintState();
 }

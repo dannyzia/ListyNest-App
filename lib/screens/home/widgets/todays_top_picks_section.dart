@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import './top_pick_card.dart';
 
 class TodaysTopPicksSection extends StatelessWidget {
+  const TodaysTopPicksSection({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -12,7 +14,7 @@ class TodaysTopPicksSection extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             'Today\'s Top Picks',
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         ListView.builder(

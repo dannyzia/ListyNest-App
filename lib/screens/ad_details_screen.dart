@@ -1,12 +1,12 @@
-import \'package:flutter/material.dart\';
-import \'package:provider/provider.dart\';
-import \'package:listynest/providers/ad_provider.dart\';
-import \'package:listynest/models/ad.dart\';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:listynest/providers/ad_provider.dart';
+import 'package:listynest/models/ad.dart';
 
 class AdDetailsScreen extends StatefulWidget {
   final String adId;
 
-  const AdDetailsScreen({Key? key, required this.adId}) : super(key: key);
+  const AdDetailsScreen({super.key, required this.adId});
 
   @override
   _AdDetailsScreenState createState() => _AdDetailsScreenState();
@@ -98,7 +98,7 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
                 children: [
                   Text(
                     ad.title,
-                    style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const SizedBox(height: 8.0),
                   // Placeholder for image carousel
@@ -111,7 +111,7 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
                   const SizedBox(height: 16.0),
                   Text(
                     ad.description,
-                    style: Theme.of(context).textTheme.bodyText1,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 16.0),
                   if (ad.isAuction)
@@ -119,7 +119,7 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
                   else
                     Text(
                       'Price: \$${ad.price.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                   const SizedBox(height: 24.0),
                   // Seller information
@@ -147,17 +147,17 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
       children: [
         Text(
           'Starting Price: \$${ad.price.toStringAsFixed(2)}',
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8.0),
         Text(
           'Highest Bid: \$${ad.highestBid?.toStringAsFixed(2) ?? 'N/A'}',
-          style: Theme.of(context).textTheme.headline6?.copyWith(color: Colors.green),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.green),
         ),
         const SizedBox(height: 8.0),
         Text(
           'Auction Ends: ${ad.auctionEndDate?.toLocal().toString() ?? 'N/A'}',
-          style: Theme.of(context).textTheme.subtitle1,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 16.0),
         Row(

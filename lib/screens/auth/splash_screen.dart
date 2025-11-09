@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../providers/auth_provider.dart';
+import 'package:listynest/providers/auth_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,23 +14,22 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _checkAuth();
+    Future.microtask(() => _checkAuth());
   }
 
   void _checkAuth() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    await Future.delayed(Duration(seconds: 2)); 
-
-    if (authProvider.isLoggedIn) {
-      Navigator.pushReplacementNamed(context, '/');
+    await authProvider.checkAuth();
+    if (authProvider.isAuthenticated) {
+      context.go('/home');
     } else {
-      Navigator.pushReplacementNamed(context, '/login');
+      context.go('/login');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: CircularProgressIndicator(),
       ),

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "962202748601",
+    "project_id": "listynest",
+    "storage_bucket": "listynest.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:962202748601:android:d2f323a000f558f496fd68",
+        "android_client_info": {
+          "package_name": "com.example.listynest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvICC68iz4UnUMJKSX2Ke4fLw-vSlkbY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

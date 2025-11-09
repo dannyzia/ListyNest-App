@@ -3,6 +3,8 @@ import 'package:listynest/models/user_profile.dart';
 import 'package:listynest/services/user_profile_service.dart';
 
 class UserProfileScreen extends StatefulWidget {
+  const UserProfileScreen({super.key});
+
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
 }

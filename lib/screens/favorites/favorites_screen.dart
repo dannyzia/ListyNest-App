@@ -8,6 +8,8 @@ class FavoritesScreen extends StatelessWidget {
   final FavoriteService _favoriteService = FavoriteService();
   final AdService _adService = AdService();
 
+  FavoritesScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

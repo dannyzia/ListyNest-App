@@ -10,7 +10,7 @@ import 'package:listynest/screens/auth/login_screen.dart';
 import 'package:listynest/screens/auth/register_screen.dart';
 import 'package:listynest/screens/ad_detail/ad_detail_screen.dart';
 import 'package:listynest/screens/post_ad/post_ad_screen.dart';
-import 'package:listynest/screens/saved_searches/saved_searches_screen.dart';
+import 'package:listynest/screens/saved_searches_screen.dart';
 import 'package:listynest/screens/favorites/favorites_screen.dart';
 import 'package:listynest/screens/bids/my_bids_screen.dart';
 import 'package:listynest/providers/auth_provider.dart';
@@ -52,26 +52,26 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: '/',
-                builder: (context, state) => HomeScreen(),
+                builder: (context, state) => const HomeScreen(),
               ),
               GoRoute(
                 path: '/search',
-                builder: (context, state) => SearchScreen(),
+                builder: (context, state) => const SearchScreen(),
               ),
               GoRoute(
                 path: '/profile',
-                builder: (context, state) => ProfileScreen(),
+                builder: (context, state) => const ProfileScreen(),
                 routes: [
                   GoRoute(
                     path: 'edit',
                     parentNavigatorKey: _rootNavigatorKey,
-                    builder: (context, state) => EditProfileScreen(),
+                    builder: (context, state) => const EditProfileScreen(),
                   ),
                 ]
               ),
               GoRoute(
                 path: '/menu',
-                builder: (context, state) => MenuScreen(),
+                builder: (context, state) => const MenuScreen(),
               ),
             ],
           ),
@@ -84,32 +84,32 @@ class AppRouter {
           GoRoute(
             path: '/post-ad',
             parentNavigatorKey: _rootNavigatorKey,
-            builder: (context, state) => PostAdScreen(),
+            builder: (context, state) => const PostAdScreen(),
           ),
           GoRoute(
             path: '/saved-searches',
             parentNavigatorKey: _rootNavigatorKey,
-            builder: (context, state) => SavedSearchesScreen(),
+            builder: (context, state) => const SavedSearchesScreen(),
           ),
           GoRoute(
             path: '/favorites',
             parentNavigatorKey: _rootNavigatorKey,
-            builder: (context, state) => FavoritesScreen(),
+            builder: (context, state) => const FavoritesScreen(),
           ),
           GoRoute(
             path: '/my-bids',
             parentNavigatorKey: _rootNavigatorKey,
-            builder: (context, state) => MyBidsScreen(),
+            builder: (context, state) => const MyBidsScreen(),
           ),
           GoRoute(
             path: '/login',
             parentNavigatorKey: _rootNavigatorKey,
-            builder: (context, state) => LoginScreen(),
+            builder: (context, state) => const LoginScreen(),
           ),
           GoRoute(
             path: '/register',
             parentNavigatorKey: _rootNavigatorKey,
-            builder: (context, state) => RegisterScreen(),
+            builder: (context, state) => const RegisterScreen(),
           ),
         ],
       );

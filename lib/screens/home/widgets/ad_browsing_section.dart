@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import './ad_card.dart';
 
 class AdBrowsingSection extends StatelessWidget {
+  const AdBrowsingSection({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,

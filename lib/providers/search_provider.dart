@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:listynest/models/ad_model.dart';
 import 'package:listynest/models/filter_options.dart';
@@ -12,6 +14,7 @@ enum SearchState {
 
 class SearchProvider with ChangeNotifier {
   final AdService adService;
+  StreamSubscription<List<Ad>>? _adSearchSubscription;
 
   SearchProvider({required this.adService});
 
@@ -29,26 +32,37 @@ class SearchProvider with ChangeNotifier {
 
   void setFilterOptions(FilterOptions options) {
     _filterOptions = options;
+    searchAds();
     notifyListeners();
   }
 
-  Future<void> searchAds() async {
+  void searchAds() {
     _state = SearchState.loading;
     notifyListeners();
 
-    try {
-      _ads = await adService.fetchAds(
-        search: _filterOptions.search,
-        category: _filterOptions.category,
-        location: _filterOptions.location,
-        minPrice: _filterOptions.minPrice,
-        maxPrice: _filterOptions.maxPrice,
-      );
+    _adSearchSubscription?.cancel();
+    _adSearchSubscription = adService
+        .searchAds(
+      search: _filterOptions.search,
+      category: _filterOptions.category,
+      location: _filterOptions.location,
+      minPrice: _filterOptions.minPrice,
+      maxPrice: _filterOptions.maxPrice,
+    )
+        .listen((ads) {
+      _ads = ads;
       _state = SearchState.loaded;
-    } catch (e) {
+      notifyListeners();
+    }, onError: (e) {
       _errorMessage = e.toString();
       _state = SearchState.error;
-    }
-    notifyListeners();
+      notifyListeners();
+    });
+  }
+
+  @override
+  void dispose() {
+    _adSearchSubscription?.cancel();
+    super.dispose();
   }
 }

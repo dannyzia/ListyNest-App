@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:listynest/models/ad.dart';
 
 class AdService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -46,11 +47,51 @@ class AdService {
     return _firestore.collection('ads').snapshots();
   }
 
-  Stream<QuerySnapshot> getAdsForUser(String userId) {
-    return _firestore.collection('ads').where('userId', isEqualTo: userId).snapshots();
+  Stream<List<Ad>> getAdsForUser(String userId) {
+    return _firestore
+        .collection('ads')
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => Ad.fromFirestore(doc)).toList());
   }
 
-  Future<DocumentSnapshot> getAdById(String adId) {
-    return _firestore.collection('ads').doc(adId).get();
+  Future<Ad?> getAdById(String adId) async {
+    final doc = await _firestore.collection('ads').doc(adId).get();
+    if (doc.exists) {
+      return Ad.fromFirestore(doc);
+    }
+    return null;
+  }
+
+  Stream<List<Ad>> searchAds({
+    String? search,
+    String? category,
+    String? location,
+    double? minPrice,
+    double? maxPrice,
+  }) {
+    Query query = _firestore.collection('ads');
+
+    if (search != null && search.isNotEmpty) {
+      query = query.where('title', isGreaterThanOrEqualTo: search).where('title', isLessThan: '${search}z');
+    }
+
+    if (category != null && category.isNotEmpty) {
+      query = query.where('category', isEqualTo: category);
+    }
+
+    if (location != null && location.isNotEmpty) {
+      query = query.where('location', isEqualTo: location);
+    }
+
+    if (minPrice != null) {
+      query = query.where('price', isGreaterThanOrEqualTo: minPrice);
+    }
+
+    if (maxPrice != null) {
+      query = query.where('price', isLessThanOrEqualTo: maxPrice);
+    }
+
+    return query.snapshots().map((snapshot) => snapshot.docs.map((doc) => Ad.fromFirestore(doc)).toList());
   }
 }

@@ -1,4 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:listynest/screens/ad_details/ad_details_screen.dart';
@@ -12,86 +13,109 @@ import 'package:listynest/screens/user/conversations_screen.dart';
 import 'package:listynest/screens/user_profile/user_profile_screen.dart';
 import 'package:listynest/services/auth_service.dart';
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
+  const App({super.key});
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  late final GoRouter _router;
   final AuthService _authService = AuthService();
 
   @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: _authService.authStateChanges,
-      builder: (context, snapshot) {
-        final router = GoRouter(
-          initialLocation: '/',
-          redirect: (context, state) {
-            final loggedIn = snapshot.hasData;
-            final loggingIn = state.matchedLocation == '/auth';
+  void initState() {
+    super.initState();
+    _router = GoRouter(
+      refreshListenable: GoRouterRefreshStream(_authService.authStateChanges),
+      initialLocation: '/',
+      redirect: (BuildContext context, GoRouterState state) {
+        final bool loggedIn = _authService.currentUser != null;
+        final bool loggingIn = state.matchedLocation == '/auth';
 
-            if (!loggedIn && !loggingIn) {
-              return '/auth';
-            }
+        if (!loggedIn) {
+          return loggingIn ? null : '/auth';
+        }
 
-            if (loggedIn && loggingIn) {
-              return '/listings';
-            }
+        if (loggingIn) {
+          return '/listings';
+        }
 
-            return null;
-          },
-          routes: [
-            GoRoute(
-              path: '/',
-              builder: (context, state) => ListingsScreen(),
-            ),
-            GoRoute(
-              path: '/auth',
-              builder: (context, state) => AuthScreen(),
-            ),
-            GoRoute(
-              path: '/listings',
-              builder: (context, state) => ListingsScreen(),
-            ),
-            GoRoute(
-              path: '/create_ad',
-              builder: (context, state) => CreateAdScreen(),
-            ),
-            GoRoute(
-              path: '/my_ads',
-              builder: (context, state) => MyAdsScreen(),
-            ),
-            GoRoute(
-              path: '/favorites',
-              builder: (context, state) => FavoritesScreen(),
-            ),
-            GoRoute(
-              path: '/ad/:adId',
-              builder: (context, state) => AdDetailsScreen(
-                adId: state.pathParameters['adId']!,
-              ),
-            ),
-            GoRoute(
-              path: '/profile',
-              builder: (context, state) => UserProfileScreen(),
-            ),
-            GoRoute(
-              path: '/conversations',
-              builder: (context, state) => ConversationsScreen(),
-            ),
-            GoRoute(
-              path: '/chat/:conversationId',
-              builder: (context, state) => ChatScreen(
-                conversationId: state.pathParameters['conversationId']!,
-              ),
-            ),
-          ],
-        );
-
-        return MaterialApp.router(
-          routerConfig: router,
-          title: 'ListyNest',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-        );
+        return null;
       },
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => ListingsScreen(),
+        ),
+        GoRoute(
+          path: '/auth',
+          builder: (context, state) => AuthScreen(),
+        ),
+        GoRoute(
+          path: '/listings',
+          builder: (context, state) => ListingsScreen(),
+        ),
+        GoRoute(
+          path: '/create_ad',
+          builder: (context, state) => CreateAdScreen(),
+        ),
+        GoRoute(
+          path: '/my_ads',
+          builder: (context, state) => MyAdsScreen(),
+        ),
+        GoRoute(
+          path: '/favorites',
+          builder: (context, state) => FavoritesScreen(),
+        ),
+        GoRoute(
+          path: '/ad/:adId',
+          builder: (context, state) => AdDetailsScreen(
+            adId: state.pathParameters['adId']!,
+          ),
+        ),
+        GoRoute(
+          path: '/profile',
+          builder: (context, state) => UserProfileScreen(),
+        ),
+        GoRoute(
+          path: '/conversations',
+          builder: (context, state) => ConversationsScreen(),
+        ),
+        GoRoute(
+          path: '/chat/:conversationId',
+          builder: (context, state) => ChatScreen(
+            conversationId: state.pathParameters['conversationId']!,
+          ),
+        ),
+      ],
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routerConfig: _router,
+      title: 'ListyNest',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+    );
+  }
+}
+
+class GoRouterRefreshStream extends ChangeNotifier {
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen((_) => notifyListeners());
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 }

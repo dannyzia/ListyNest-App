@@ -6,11 +6,11 @@ class DetailsStep extends StatelessWidget {
   final TextEditingController descriptionController;
 
   const DetailsStep({
-    Key? key,
+    super.key,
     required this.formKey,
     required this.titleController,
     required this.descriptionController,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

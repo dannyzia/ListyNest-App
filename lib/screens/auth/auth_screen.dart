@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:listynest/services/auth_service.dart';
 
 class AuthScreen extends StatefulWidget {
+  const AuthScreen({super.key});
+
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
@@ -34,14 +36,16 @@ class _AuthScreenState extends State<AuthScreen> {
           );
         }
       } on FirebaseAuthException catch (e) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.message ?? 'An unknown error occurred.'),
           ),
         );
       } catch (e) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('An unknown error occurred.'),
           ),
         );
@@ -69,7 +73,7 @@ class _AuthScreenState extends State<AuthScreen> {
         title: Text(_isLogin ? 'Login' : 'Sign Up'),
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
@@ -79,7 +83,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   children: [
                     TextFormField(
                       controller: _emailController,
-                      decoration: InputDecoration(labelText: 'Email'),
+                      decoration: const InputDecoration(labelText: 'Email'),
                       validator: (value) {
                         if (value == null || !value.contains('@')) {
                           return 'Please enter a valid email';
@@ -89,7 +93,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                     TextFormField(
                       controller: _passwordController,
-                      decoration: InputDecoration(labelText: 'Password'),
+                      decoration: const InputDecoration(labelText: 'Password'),
                       obscureText: true,
                       validator: (value) {
                         if (value == null || value.length < 6) {
@@ -98,7 +102,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _submit,
                       child: Text(_isLogin ? 'Login' : 'Sign Up'),

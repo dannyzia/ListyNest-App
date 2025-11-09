@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:listynest/screens/ad_details_screen.dart';
-import 'package:listynest/screens/ad_form_screen.dart';
+import 'package:listynest/screens/create_ad/create_ad_screen.dart';
 import 'package:listynest/screens/main_screen.dart';
 import 'package:listynest/screens/user/favorites_screen.dart';
 import 'package:listynest/screens/user/my_account_screen.dart';
@@ -19,7 +19,7 @@ class AppRouter {
       GoRoute(
         path: '/ad/new',
         builder: (BuildContext context, GoRouterState state) =>
-            const AdFormScreen(),
+            const CreateAdScreen(),
       ),
       GoRoute(
         path: '/ad/:id',

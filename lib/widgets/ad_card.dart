@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/ad_model.dart';
-import '../screens/ads/ad_details_screen.dart';
+import 'package:listynest/models/ad_model.dart';
+import 'package:listynest/screens/ad_detail/ad_detail_screen.dart';
 
 class AdCard extends StatelessWidget {
   final Ad ad;
@@ -19,7 +19,7 @@ class AdCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AdDetailsScreen(ad: ad),
+              builder: (context) => AdDetailScreen(adId: ad.id),
             ),
           );
         },
@@ -29,7 +29,7 @@ class AdCard extends StatelessWidget {
             AspectRatio(
               aspectRatio: 16 / 9,
               child: Image.network(
-                ad.images.isNotEmpty ? ad.images[0] : 'https://via.placeholder.com/150',
+                ad.images.isNotEmpty ? ad.images[0].url : 'https://via.placeholder.com/150',
                 fit: BoxFit.cover,
               ),
             ),
@@ -44,18 +44,18 @@ class AdCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     ad.price.toString(),
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).primaryColor,
                         ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(Icons.location_on, size: 14, color: Colors.grey),
-                      SizedBox(width: 4),
+                      const Icon(Icons.location_on, size: 14, color: Colors.grey),
+                      const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           ad.location,

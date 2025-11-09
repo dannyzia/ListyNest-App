@@ -53,6 +53,21 @@ in {
     pkgs.atk
     pkgs.gdk-pixbuf
     pkgs.at-spi2-atk
+    pkgs.libxkbcommon
+    pkgs.libinput
+    pkgs.xorg.libX11
+    pkgs.xorg.libXext
+    pkgs.xorg.libXrandr
+    pkgs.xorg.libXinerama
+    pkgs.xorg.libXi
+    pkgs.xorg.libXcursor
+    pkgs.xorg.libXdamage
+    pkgs.xorg.libXfixes
+    pkgs.xorg.libXrender
+    pkgs.xorg.libXcomposite
+    pkgs.xorg.libXtst
+    pkgs.mesa
+    pkgs.vulkan-loader
   ];
 
   # 4. Set environment variables

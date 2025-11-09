@@ -1,63 +1,38 @@
+
 import 'package:flutter/foundation.dart';
-import '../models/user_model.dart';
-import '../services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 class AuthProvider with ChangeNotifier {
-  final AuthService _authService;
+  final firebase_auth.FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;
+  firebase_auth.User? _user;
   
-  User? _user;
-  bool _isLoading = false;
-  String? _errorMessage;
-
-  User? get user => _user;
-  bool get isLoading => _isLoading;
-  String? get errorMessage => _errorMessage;
-  bool get isLoggedIn => _user != null;
-
-  AuthProvider(this._authService);
-
+  firebase_auth.User? get user => _user;
+  bool get isAuthenticated => _user != null;
+  
+  AuthProvider() {
+    _auth.authStateChanges().listen((user) {
+      _user = user;
+      notifyListeners();
+    });
+  }
+  
   Future<void> login(String email, String password) async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
-
     try {
-      _user = await _authService.login(email, password);
-      _isLoading = false;
-      notifyListeners();
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
     } catch (e) {
-      _errorMessage = e.toString();
-      _isLoading = false;
-      notifyListeners();
       rethrow;
     }
   }
-
-  Future<void> register(String name, String email, String password) async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
-
+  
+  Future<void> register(String email, String password) async {
     try {
-      _user = await _authService.register(name, email, password);
-      _isLoading = false;
-      notifyListeners();
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
     } catch (e) {
-      _errorMessage = e.toString();
-      _isLoading = false;
-      notifyListeners();
       rethrow;
     }
   }
-
-  Future<void> checkAuth() async {
-    _user = await _authService.getCurrentUser();
-    notifyListeners();
-  }
-
+  
   Future<void> logout() async {
-    await _authService.logout();
-    _user = null;
-    notifyListeners();
+    await _auth.signOut();
   }
 }

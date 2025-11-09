@@ -1,51 +1,40 @@
 import 'package:flutter/foundation.dart';
-import '../models/ad_model.dart';
+import '../models/ad.dart';
 import '../services/ad_service.dart';
 
 class AdProvider with ChangeNotifier {
-  final AdService _adService;
-
+  final AdService _adService = AdService();
   List<Ad> _ads = [];
   bool _isLoading = false;
   String? _errorMessage;
-
+  
   List<Ad> get ads => _ads;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
-
-  AdProvider(this._adService);
-
-  Future<void> fetchAds({String? category, String? location, double? minPrice, double? maxPrice, String? search}) async {
+  
+  Future<void> fetchAds() async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
-
+    
     try {
-      _ads = await _adService.getAds(category: category, location: location, minPrice: minPrice, maxPrice: maxPrice, search: search);
-      _isLoading = false;
-      notifyListeners();
+      _ads = await _adService.fetchAds();
     } catch (e) {
       _errorMessage = e.toString();
+    } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
-
-  Future<void> createAd(Map<String, dynamic> adData) async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
-
+  
+  Future<void> postAd(Ad ad) async {
     try {
-      await _adService.createAd(adData);
-      await fetchAds(); // Refresh the list
+      await _adService.createAd(ad);
+      await fetchAds();
     } catch (e) {
       _errorMessage = e.toString();
-      _isLoading = false;
       notifyListeners();
       rethrow;
     }
   }
-
-  // Add other methods for updating, deleting, and favoriting ads
 }

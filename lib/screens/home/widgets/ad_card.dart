@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AdCard extends StatelessWidget {
+  const AdCard({super.key});
+
   // Ad model will be passed here
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Container(
+      child: SizedBox(
         width: 150,
         child: Column(
           children: <Widget>[
