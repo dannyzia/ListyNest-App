@@ -8,10 +8,10 @@ class AddAdForm extends StatefulWidget {
   const AddAdForm({super.key, required this.onAdAdded});
 
   @override
-  _AddAdFormState createState() => _AddAdFormState();
+  AddAdFormState createState() => AddAdFormState();
 }
 
-class _AddAdFormState extends State<AddAdForm> {
+class AddAdFormState extends State<AddAdForm> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();

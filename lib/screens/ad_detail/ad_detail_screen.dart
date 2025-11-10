@@ -109,7 +109,7 @@ class AdDetailScreen extends StatelessWidget {
                   if (ad.category != null)
                     Chip(
                       label: Text(ad.category!),
-                      backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                      backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     ),
                   const SizedBox(height: 16),
 
@@ -236,6 +236,7 @@ class AdDetailScreen extends StatelessWidget {
             onPressed: () async {
               if (reasonController.text.isNotEmpty) {
                 await adProvider.reportAd(ad.id, reasonController.text);
+                if (!context.mounted) return;
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Ad reported successfully')),

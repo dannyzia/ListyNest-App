@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'api_service.dart';
+// import 'api_service.dart'; // TODO: Use for backend integration
 
 class LocationService {
-  final ApiService _apiService = ApiService();
+  // TODO: Use _apiService when backend is ready
+  // final ApiService _apiService = ApiService();
 
   Future<List<String>> getSuggestions(String query) async {
     // This is a mock implementation. Replace with actual API call.

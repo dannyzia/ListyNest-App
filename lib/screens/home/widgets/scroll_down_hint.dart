@@ -4,10 +4,10 @@ class ScrollDownHint extends StatefulWidget {
   const ScrollDownHint({super.key});
 
   @override
-  _ScrollDownHintState createState() => _ScrollDownHintState();
+  ScrollDownHintState createState() => ScrollDownHintState();
 }
 
-class _ScrollDownHintState extends State<ScrollDownHint> with SingleTickerProviderStateMixin {
+class ScrollDownHintState extends State<ScrollDownHint> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 

@@ -178,6 +178,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Navigator.pushReplacementNamed(context, '/');
         }
       } catch (e) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Registration failed: ${e.toString()}')),
         );

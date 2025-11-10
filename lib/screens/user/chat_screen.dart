@@ -8,10 +8,10 @@ class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key, required this.conversationId});
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  ChatScreenState createState() => ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class ChatScreenState extends State<ChatScreen> {
   final ChatService _chatService = ChatService();
   final _messageController = TextEditingController();
 

@@ -51,7 +51,7 @@ class ProfileScreen extends StatelessWidget {
           // Profile Header
           Container(
             padding: const EdgeInsets.all(24),
-            color: Theme.of(context).primaryColor.withOpacity(0.1),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             child: Column(
               children: [
                 CircleAvatar(
@@ -159,6 +159,7 @@ class ProfileScreen extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: () async {
                 await authProvider.logout();
+                if (!context.mounted) return;
                 Navigator.pushReplacementNamed(context, '/login');
               },
               icon: const Icon(Icons.logout),
@@ -216,11 +217,13 @@ class ProfileScreen extends StatelessWidget {
                   nameController.text,
                   phoneController.text.isNotEmpty ? phoneController.text : null,
                 );
+                if (!context.mounted) return;
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Profile updated successfully')),
                 );
               } catch (e) {
+                if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Failed to update profile')),
                 );

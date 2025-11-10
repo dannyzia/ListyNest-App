@@ -6,10 +6,10 @@ class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
 
   @override
-  _UserProfileScreenState createState() => _UserProfileScreenState();
+  UserProfileScreenState createState() => UserProfileScreenState();
 }
 
-class _UserProfileScreenState extends State<UserProfileScreen> {
+class UserProfileScreenState extends State<UserProfileScreen> {
   final UserProfileService _userProfileService = UserProfileService();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -62,6 +62,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       email: userProfile.email,
                     );
                     await _userProfileService.updateUserProfile(updatedProfile);
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Profile updated successfully!')),
                     );

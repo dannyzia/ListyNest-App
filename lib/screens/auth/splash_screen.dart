@@ -9,19 +9,20 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => _checkAuth(context));
+    _checkAuth();
   }
 
-  void _checkAuth(BuildContext context) async {
+  void _checkAuth() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     await authProvider.checkAuth();
+    if (!mounted) return;
     if (authProvider.isAuthenticated) {
       Navigator.pushReplacement(
         context,
