@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ListTile(
                 leading: const Icon(Icons.list),
                 title: const Text('My Ads'),
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MyAdsScreen())),
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MyAdsScreen())),
               ),
               ListTile(
                 leading: const Icon(Icons.favorite),

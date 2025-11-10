@@ -103,10 +103,14 @@ class _AuthScreenState extends State<AuthScreen> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: _submit,
-                      child: Text(_isLogin ? 'Login' : 'Sign Up'),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _submit,
+                        child: Text(_isLogin ? 'Login' : 'Sign Up'),
+                      ),
                     ),
+                    const SizedBox(height: 16),
                     TextButton(
                       onPressed: () {
                         setState(() {

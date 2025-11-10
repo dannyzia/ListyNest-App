@@ -1,5 +1,4 @@
 // lib/providers/category_provider.dart
-import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
 import '../models/category.dart';
 

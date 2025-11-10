@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:listynest/providers/ad_provider.dart';
-import 'package:listynest/models/ad.dart';
 
 class AdDetailsScreen extends StatefulWidget {
   final String adId;

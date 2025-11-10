@@ -44,7 +44,7 @@ class _ListingsScreenState extends State<ListingsScreen> {
               ),
               PopupMenuItem(
                 child: const Text('My Ads'),
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyAdsScreen())),
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const MyAdsScreen())),
               ),
               PopupMenuItem(
                 child: const Text('Favorites'),

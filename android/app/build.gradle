@@ -1,10 +1,10 @@
 plugins {
     id "com.android.application"
-    // START: FlutterFire Configuration
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
+    // START: FlutterFire Configuration (Google services must be last)
     id 'com.google.gms.google-services'
     // END: FlutterFire Configuration
-    id "kotlin-android"
-    id "dev.flutter.flutter-gradle-plugin"
 }
 
 def localProperties = new Properties()
@@ -67,4 +67,7 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    // Explicit Kotlin stdlib (Gradle already adds but keep for clarity / jdk8 extensions)
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+}
